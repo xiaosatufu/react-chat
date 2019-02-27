@@ -2,15 +2,16 @@ import axios from 'axios'
 import {
     getRedirectPath
 } from '../utils'
-const REGISTER_SUCCESS = 'REGISTER_SUCCESS'
+// const REGISTER_SUCCESS = 'REGISTER_SUCCESS'
 const ERROR_MSG = 'ERROR_MSG'
-const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
+// const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
 const LOAD_DATA = 'LOAD_DATA'
+const AUTH_SUCCESS = 'AUTH_SUCCESS'
 
 const initState = {
     redirectTo: '',
     msg: '',
-    isAuth: '',
+    // isAuth: '',
     user: '',
     pwd: '',
     type: ''
@@ -19,28 +20,28 @@ const initState = {
 export function user(state = initState, action) {
 
 
-    if (action.type === REGISTER_SUCCESS) {
+    if (action.type === AUTH_SUCCESS) {
         // console.log(...state)
         // console.log(...action.payload)
         return {
             ...state,
             msg: '',
             redirectTo: getRedirectPath(action.payload),
-            isAuth: true,
+            // isAuth: true,
             ...action.payload
         }
     }
-    if (action.type === LOGIN_SUCCESS) {
-        // console.log(...state)
-        // console.log(...action.payload)
-        return {
-            ...state,
-            msg: '',
-            redirectTo: getRedirectPath(action.payload),
-            isAuth: true,
-            ...action.payload
-        }
-    }
+    // if (action.type === LOGIN_SUCCESS) {
+    //     // console.log(...state)
+    //     // console.log(...action.payload)
+    //     return {
+    //         ...state,
+    //         msg: '',
+    //         redirectTo: getRedirectPath(action.payload),
+    //         isAuth: true,
+    //         ...action.payload
+    //     }
+    // }
     if (action.type === LOAD_DATA) {
         return {...state,...action.payload}
     }
@@ -54,19 +55,30 @@ export function user(state = initState, action) {
     }
     return state
 }
-function loginSuccess(data){
+
+
+function authSuccess(obj){
+    const {pwd,...data} = obj
     return {
-        type:LOGIN_SUCCESS,
+        type:AUTH_SUCCESS,
         payload:data,
 
     }
 }
-function registerSuccess(data) {
-    return {
-        type: REGISTER_SUCCESS,
-        payload: data
-    }
-}
+
+// function loginSuccess(data){
+//     return {
+//         type:LOGIN_SUCCESS,
+//         payload:data,
+
+//     }
+// }
+// function registerSuccess(data) {
+//     return {
+//         type: REGISTER_SUCCESS,
+//         payload: data
+//     }
+// }
 
 function errorMsg(msg) {
     return {
@@ -80,6 +92,18 @@ export function loadData(userinfo){
 }
 
 
+
+export function update(data){
+    return dispatch=>{
+        axios.post('/user/update',data).then((res)=>{
+            if (res.data.code === 0 && res.status === 200) {
+                dispatch(authSuccess(res.data.data))
+            } else {
+                dispatch(errorMsg(res.data.msg))
+            }
+        })
+    }
+}
 
 export function login({
     user,
@@ -99,7 +123,7 @@ export function login({
                 //     pwd,
                 //     type
                 // }))
-                dispatch(loginSuccess(res.data.data))
+                dispatch(authSuccess(res.data.data))
             } else {
                 dispatch(errorMsg(res.data.msg))
             }
@@ -126,7 +150,7 @@ export function register({
             type
         }).then((res) => {
             if (res.data.code === 0 && res.status === 200) {
-                dispatch(registerSuccess({
+                dispatch(authSuccess({
                     user,
                     pwd,
                     type
