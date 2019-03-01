@@ -4,13 +4,17 @@ import {login} from '../../redux/user.redux'
 import {connect} from 'react-redux'
 import {Redirect} from 'react-router-dom'
 import Logo from "../../component/logo/Logo";
+import chatForm from "../../component/form/form"
+
+
+@chatForm
 class Login extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      user: "",
-      pwd: "",
-    };
+    // this.state = {
+    //   user: "",
+    //   pwd: "",
+    // };
     this.handleLogin = this.handleLogin.bind(this);
     this.register = this.register.bind(this);
   }
@@ -18,24 +22,24 @@ class Login extends Component {
     this.props.history.push("/register");
   }
   handleLogin(){
-    this.props.login(this.state)
+    this.props.login(this.props.state)
   }
-  handleChange(key, val) {
-    this.setState({
-      [key]: val
-    });
-  }
+  // handleChange(key, val) {
+  //   this.setState({
+  //     [key]: val
+  //   });
+  // }
 
   render() {
     return (
       <div>
-        {this.props.redirectTo?<Redirect to={this.props.redirectTo} ></Redirect>:null}
+        {(this.props.redirectTo&&this.props.redirectTo!=='/login')?<Redirect to={this.props.redirectTo} ></Redirect>:null}
         <Logo />
         {this.props.msg ? <p>{this.props.msg}</p> : null}
         <WingBlank>
           <List>
-            <InputItem onChange={v => this.handleChange("user", v)}>用户</InputItem>
-            <InputItem type="password" onChange={v => this.handleChange("pwd", v)}>密码</InputItem>
+            <InputItem onChange={v => this.props.handleChange("user", v)}>用户</InputItem>
+            <InputItem type="password" onChange={v => this.props.handleChange("pwd", v)}>密码</InputItem>
           </List>
           <WhiteSpace />
           <Button onClick={this.handleLogin}  type="primary">登录</Button>

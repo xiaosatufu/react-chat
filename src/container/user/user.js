@@ -39,7 +39,7 @@ class User extends Component {
     return props.avatar ? (
       
       <div>
-         {props.redirectTo?<Redirect to={props.redirectTo} ></Redirect>:null} 
+         {/* {props.redirectTo?<Redirect to={props.redirectTo} ></Redirect>:null}  */}
         <Result
           img={
             <img src={require(`../../component/imgs/${props.avatar}.png`)} />
@@ -61,7 +61,7 @@ class User extends Component {
           <Item onClick={this.logout}> 退出登录 </Item>
         </List>
       </div>
-    ) : null;
+    ) : <Redirect to={props.redirectTo} ></Redirect>;
   }
 }
 

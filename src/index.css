@@ -31,3 +31,16 @@ code {
   display: block;
   max-width: 100%;
 }
+
+#chat-page .chat-me .am-list-extra {
+  flex-basis: auto;
+}
+#chat-page .chat-me .am-list-contnet {
+  padding: 15px;
+  text-align: right;
+}
+.stick-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
