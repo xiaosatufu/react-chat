@@ -25,7 +25,7 @@ class AuthRoute extends Component {
         //用户是否完善信息(选择头像,个人简介)
         axios.get('/user/info').then((res) => {
             if (res.status === 200) {
-                console.log(res.data)
+                // console.log(res.data)
                 if (res.data.code === 0) {
 
                     this.props.loadData(res.data.data)

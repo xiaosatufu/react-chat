@@ -21,7 +21,7 @@ const models = {
         'from':{type:String,require:true},
         'to':{type:String,require:true},
         'read':{type:Boolean,default:false},
-        'connect':{type:String,require:true,default:''},
+        'content':{type:String,require:true,default:''},
         'create_time':{type:Number,default:new Date().getTime()}
     }
 }

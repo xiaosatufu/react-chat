@@ -13,42 +13,84 @@ const _filter = {
     '_v': 0
 }
 
+
+// Chat.remove({},function(e,d){
+
+// })
+
 Router.get('/list', function (req, res) {
     // User.remove({},function(e,d){})
-    const {type} = req.query
-    User.find({type}, function (err, doc) {
+    const {
+        type
+    } = req.query
+    User.find({
+        type
+    }, function (err, doc) {
         return res.json({
-            code:0,
-            data:doc
+            code: 0,
+            data: doc
         })
     })
 })
 
 
 
-Router.get('/getmsglist',function(req,res){
-    const user = req.cookies.user
-    // '$or':[{from:user,to:user}]
-    Chat.find({},function(err,doc){
-        if (!err) {
-            return res.json({code:0,msgs:doc})
-        }
+Router.get('/getmsglist', function (req, res) {
+    const user = req.cookies.userid
+    User.find({}, function (e, userdoc) {
+        let users = {}
+        userdoc.forEach(v => {
+            users[v._id] = {
+                name: v.user,
+                avatar: v.avatar
+            }
+        })
+        // '$or':[{from:user,to:user}]
+        Chat.find({'$or':[{from:user},{to:user}]}, function (err, doc) {
+            // console.log(doc)
+            if (!err) {
+                return res.json({
+                    code: 0,
+                    msgs: doc,
+                    users:users
+                })
+            }
+        })
     })
 })
 
 
-Router.post('/update',function(req,res){
+Router.post('/readmsg',function(req,res){
+    const userid = req.cookies.userid
+    const {from} = req.body
+    Chat.update({from,to:userid},{'$set':{read:true}},{'multi':true},function(err,doc){
+        if (!err) {
+            return res.json({code:0,num:doc.nModified})
+        }
+        return res.json({
+            code:1,
+            msg:'修改失败'
+        })
+    })
+})
+
+Router.post('/update', function (req, res) {
     const userid = req.cookies.userid
     if (!userid) {
-        return json.dumps({code:1})
+        return json.dumps({
+            code: 1
+        })
     }
     const body = req.body
-    User.findByIdAndUpdate(userid,body,function(err,doc){
-        const data = Object.assign({},{
-            user:doc.user,
-            type:doc.type
-        },body)
-        return res.json({code:0,data})
+    User.findByIdAndUpdate(userid, body, function (err, doc) {
+        const data = Object.assign({}, {
+            user: doc.user,
+            type: doc.type
+        }, body)
+        return res.json({
+            code: 0,
+            data
+        })
     })
 })
 
